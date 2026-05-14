@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>البطة المرتاحة للحجز والسياحة🦆</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="hero-bg"></div>
+
+<!-- صفحة 1: تسجيل الدخول -->
+<div class="page active" id="page-1">
+  <header class="site-header">
+    <div class="logo">البطة المرتاحة للحجز والسياحة🦆</div>
+  </header>
+  <div class="center-box">
+    <div class="card">
+      <h1>أهلاً بك في البطة المرتاحة للحجز والسياحة🦆</h1>
+      <p class="sub">أدخل بياناتك للبدء في البحث عن فندقك المثالي</p>
+      <div class="err" id="err1"></div>
+      <div class="field"><label>الاسم الكامل</label><input type="text" id="name" placeholder="مثال: أدهم أشرف محمود"></div>
+      <div class="field"><label>العمر</label><input type="number" id="age" placeholder="18-99" min="18" max="99"></div>
+      <div class="field"><label>رقم الهوية الوطنية (14 رقم)</label><input type="text" id="idnum" placeholder="أدخل رقم الهوية" maxlength="14"></div>
+      <button class="btn-gold" onclick="signIn()">تسجيل الدخول والمتابعة ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة 2: البحث -->
+<div class="page" id="page-2">
+  <header class="site-header">
+    <div class="logo">البطة المرتاحة للحجز والسياحة 🦆</div>
+    <button class="nav-btn" onclick="goMyBookings()">📋 حجوزاتي</button>
+  </header>
+  <div class="container">
+    <h2>ابحث عن فندقك 🏨</h2>
+    <p>مرحباً <span id="guest-name" class="highlight"></span>، أين تريد الإقامة؟</p>
+    <div class="search-box">
+      <div class="field"><label>المدينة</label>
+        <select id="city">
+          <option value="">اختر المدينة...</option>
+          <option value="القاهرة">القاهرة</option>
+          <option value="الإسكندرية">الإسكندرية</option>
+          <option value="الأقصر">الأقصر</option>
+          <option value="أسوان">أسوان</option>
+          <option value="شرم الشيخ">شرم الشيخ</option>
+          <option value="الغردقة">الغردقة</option>
+          <option value="الجونة">الجونة</option>
+          <option value="مرسى علم">مرسى علم</option>
+          <option value="دهب">دهب</option>
+          <option value="الفيوم">الفيوم</option>
+          <option value="سيوة">سيوة</option>
+        </select>
+      </div>
+      <div class="field"><label>نوع الغرفة</label>
+        <select id="room">
+          <option value="single">سنجل - فردية</option>
+          <option value="double">دبل - مزدوجة (+30%)</option>
+        </select>
+      </div>
+      <div class="field"><label>نطاق السعر / ليلة</label>
+        <select id="price">
+          <option value="all">الكل</option>
+          <option value="budget">اقتصادي (&lt; 1,500 ج.م)</option>
+          <option value="mid">متوسط (1,500 - 3,500 ج.م)</option>
+          <option value="luxury">فاخر (&gt; 3,500 ج.م)</option>
+        </select>
+      </div>
+      <button class="btn-gold" onclick="search()">🔍 بحث</button>
+    </div>
+    <div class="loading" id="loading"><div class="spinner"></div><p>جارٍ البحث عن أفضل الفنادق...</p></div>
+    <div class="results" id="results">
+      <p class="results-header">تم إيجاد <span id="count">0</span> فندق</p>
+      <div id="hotels"></div>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة 3: الحجز -->
+<div class="page" id="page-3">
+  <header class="site-header">
+    <div class="logo">البطة المرتاحة للحجز والسياحة 🦆</div>
+    <button class="nav-btn" onclick="goMyBookings()">📋 حجوزاتي</button>
+  </header>
+  <div class="container" style="max-width:650px">
+    <div class="hotel-banner">
+      <div class="banner-icon" id="h-icon">🏨</div>
+      <div class="banner-info">
+        <h3 id="h-name">—</h3>
+        <div id="h-stars">—</div>
+        <div id="h-amenities"></div>
+      </div>
+      <div class="banner-price">
+        <div id="h-price">—</div>
+        <small>لكل ليلة</small>
+      </div>
+    </div>
+    <div class="card">
+      <h3>بيانات الضيف</h3>
+      <div class="info-row"><span>الاسم</span><b id="b-name">—</b></div>
+      <div class="info-row"><span>العمر</span><b id="b-age">—</b></div>
+      <div class="info-row"><span>رقم الهوية</span><b id="b-id">—</b></div>
+      <div class="info-row"><span>نوع الغرفة</span><b id="b-room">—</b></div>
+    </div>
+    <div class="card">
+      <h3>تواريخ الإقامة</h3>
+      <div class="field-row">
+        <div class="field"><label>يوم الوصول</label><input type="date" id="in-date" onchange="calc()"></div>
+        <div class="field"><label>يوم المغادرة</label><input type="date" id="out-date" onchange="calc()"></div>
+      </div>
+    </div>
+    <div class="total-box">
+      <div class="t-row"><span>سعر الليلة</span><b id="t-night">—</b></div>
+      <div class="t-row"><span>عدد الليالي</span><b id="t-nights">—</b></div>
+      <div class="t-row"><span>ضريبة القيمة المضافة (14%)</span><b id="t-tax">—</b></div>
+      <div class="t-row total"><span>الإجمالي</span><b id="t-total">—</b></div>
+    </div>
+    <div class="err" id="err3"></div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="goTo(2)">← رجوع</button>
+      <button class="btn-gold" onclick="goPay()">المتابعة للدفع 💳</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة 4: الدفع -->
+<div class="page" id="page-4">
+  <header class="site-header">
+    <div class="logo">البطة المرتاحة للحجز والسياحة 🦆</div>
+    <button class="nav-btn" onclick="goMyBookings()">📋 حجوزاتي</button>
+  </header>
+  <div class="container" style="max-width:500px">
+    <div class="pay-summary">
+      <div><b id="p-hotel">—</b><br><small id="p-dates">—</small></div>
+      <div style="text-align:left"><b id="p-total" class="gold-big">—</b><br><small>شامل الضريبة</small></div>
+    </div>
+    <p class="section-label">طريقة الدفع</p>
+    <div class="pay-tabs">
+      <div class="pay-tab active" onclick="setPay('card',this)">💳 بطاقة ائتمان</div>
+      <div class="pay-tab" onclick="setPay('vodafone',this)">📱 فودافون كاش</div>
+      <div class="pay-tab" onclick="setPay('instapay',this)">🏦 إنستا باي</div>
+    </div>
+    <div class="card" id="card-form">
+      <div class="field"><label>اسم حامل البطاقة</label><input type="text" id="c-name" placeholder="الاسم كما على البطاقة"></div>
+      <div class="field"><label>رقم البطاقة</label><input type="text" id="c-num" placeholder="0000 0000 0000 0000" maxlength="19"></div>
+      <div class="field-row">
+        <div class="field"><label>تاريخ الانتهاء</label><input type="text" id="c-exp" placeholder="MM/YY" maxlength="5"></div>
+        <div class="field"><label>CVV</label><input type="text" id="c-cvv" placeholder="123" maxlength="3"></div>
+      </div>
+      <p class="secure">🔒 الدفع مشفر وآمن بتقنية SSL 256-bit</p>
+    </div>
+    <div class="card center" id="alt-form" style="display:none">
+      <div class="big-icon" id="alt-icon">📱</div>
+      <h3 id="alt-title">فودافون كاش</h3>
+      <p class="muted">اضغط الزر للدفع باستخدام <span id="alt-name">فودافون كاش</span></p>
+      <button class="btn-gold" style="max-width:250px" onclick="confirmPay()">ادفع الآن</button>
+    </div>
+    <div class="err" id="err4"></div>
+    <div class="btn-group">
+      <button class="btn-outline" onclick="goTo(3)">← رجوع</button>
+      <button class="btn-gold" id="pay-btn" onclick="confirmPay()">تأكيد الدفع والحجز 🔒</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة 5: حجوزاتي -->
+<div class="page" id="page-5">
+  <header class="site-header">
+    <div class="logo">البطة المرتاحة للحجز والسياحة 🦆</div>
+    <button class="nav-btn" onclick="goTo(2)" style="background:transparent;color:var(--muted)">← رجوع للبحث</button>
+  </header>
+  <div class="container" style="max-width:750px">
+    <h2>حجوزاتي 📋</h2>
+    <p class="sub">جميع حجوزاتك المحفوظة على هذا الجهاز</p>
+    <div class="stats">
+      <div class="stat"><div id="s-total">0</div><small>إجمالي الحجوزات</small></div>
+      <div class="stat"><div id="s-active">0</div><small>حجوزات نشطة</small></div>
+      <div class="stat"><div id="s-spent">0 ج.م</div><small>إجمالي المنفق</small></div>
+    </div>
+    <div id="bookings"></div>
+  </div>
+</div>
+
+<!-- نجاح -->
+<div class="success" id="success">
+  <div class="success-icon">🎉</div>
+  <h2>تم الحجز والدفع بنجاح!</h2>
+  <p>تم تأكيد حجزك في <b id="s-hotel">—</b></p>
+  <p>من <b id="s-dates">—</b></p>
+  <div class="ref" id="s-ref">—</div>
+  <p class="muted">احتفظ برقم الحجز للمراجعة عند الوصول</p>
+  <div class="btn-group" style="margin-top:20px">
+    <button class="btn-gold" onclick="viewBookings()">📋 عرض حجوزاتي</button>
+    <button class="btn-outline" onclick="restart()">حجز جديد 🔄</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+      </html>
